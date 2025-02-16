@@ -1,0 +1,22 @@
+linters:
+  enable:
+    - gci
+    - govet
+    - ineffassign
+    - typecheck
+    - unused
+    - gocyclo
+    - goconst
+    - gofumpt
+    - goimports
+    - misspell
+  disable:
+    - errcheck
+    - gosimple
+    - staticcheck
+
+run:
+  build-tags:
+    - wireinject
+  tests: false
+  timeout: 5m
