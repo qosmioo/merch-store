@@ -1,0 +1,44 @@
+services:
+  avito-shop-service:
+    build: .
+    container_name: avito-shop-service
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=merch_store
+      - DATABASE_HOST=postgres
+      - SERVER_PORT=8080
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal
+
+  db:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: merch_store
+    volumes:
+      - ./migrations/0001_create_employees_table.up.sql:/docker-entrypoint-initdb.d/0001_create_employees_table.up.sql
+      - ./migrations/0002_create_merch_table.up.sql:/docker-entrypoint-initdb.d/0002_create_merch_table.up.sql
+      - ./migrations/0003_create_inventory_table.up.sql:/docker-entrypoint-initdb.d/0003_create_inventory_table.up.sql
+      - ./migrations/0004_create_transactions_table.up.sql:/docker-entrypoint-initdb.d/0004_create_transactions_table.up.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d merch_store"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal
+
+networks:
+  internal: 
