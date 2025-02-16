@@ -1,0 +1,7 @@
+database:
+  user: postgres
+  password: postgres
+  dbname: merch_store
+  host: postgres
+  port: "5432"
+  sslmode: disable 
